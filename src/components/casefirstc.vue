@@ -13,8 +13,7 @@
           <v-layout row wrap>
             &emsp;&emsp;
             <v-flex d-flex>
-              <v-text-field v-model="out_reg.exPid" label="就诊科室" readonly>
-              </v-text-field>
+               <v-text-field label="住院次数"></v-text-field>
             </v-flex>
             <v-flex d-flex>
               &emsp;&emsp;

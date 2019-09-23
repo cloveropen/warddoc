@@ -18,7 +18,7 @@
               ></v-select>
             </v-flex>
 <v-flex d-flex>
-              病情            
+             &nbsp; 病情            
              <v-checkbox v-model="checkbox1" label="一般"></v-checkbox>&nbsp;
     <v-checkbox v-model="checkbox2" label="急"></v-checkbox>&nbsp;
     <v-checkbox v-model="checkbox3" label="重"></v-checkbox>
@@ -40,7 +40,7 @@
               <v-data-table
                 :headers="headers"
                 :items="desserts"
-                :search="search" @dblclick="getpatient($event)"
+                :search="search" @click:row="getpatient($event)"
               ></v-data-table>
             </v-card>
           </v-expansion-panel-content>
@@ -251,7 +251,7 @@ export default {
   methods: {
     
     getpatient(e){
-      window.alert("click"+e)
+      window.alert("click"+JSON.stringify(e))
     },
     getpatient1(){
       window.alert("click")
