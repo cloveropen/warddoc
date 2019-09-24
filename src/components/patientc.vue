@@ -103,16 +103,55 @@
         医技报告
       </v-tab>
       <v-tab-item>
-          <v-card flat>111111111111111</v-card>
+          <v-card flat>
+              <v-layout row wrap>
+              <v-flex d-flex>
+              &emsp;&emsp;
+            <v-checkbox label="长嘱"></v-checkbox>&nbsp;
+            <v-checkbox label="临嘱"></v-checkbox>&nbsp;
+            <v-checkbox label="新下达"></v-checkbox>
+            <v-checkbox label="已校对"></v-checkbox>
+            <v-checkbox label="已作废"></v-checkbox>
+            <v-checkbox label="重整后"></v-checkbox> 
+            &emsp;
+             <v-btn color="success">查询医嘱</v-btn>          
+              </v-flex>
+              <v-flex d-flex>&emsp;
+              <v-spacer></v-spacer>
+              </v-flex>
+              <v-flex d-flex>&emsp;
+              <v-spacer></v-spacer>
+              </v-flex>
+              </v-layout>
+              <v-layout row wrap>
+                  <v-flex d-flex>
+              <v-data-table
+                :headers="headers"
+                :items="desserts"               
+              ></v-data-table>
+                  </v-flex></v-layout>
+          </v-card>
       </v-tab-item>
       <v-tab-item>
-          <v-card flat>222222222222</v-card>
+          <v-card flat>
+              <div> <pdf src="/test.pdf" style="width:100%"></pdf></div>
+          </v-card>
       </v-tab-item>
       <v-tab-item>
-          <v-card flat>333333333333333</v-card>
+          <v-card flat>
+              <div>
+		<pdf
+			v-for="i in numPages"
+			:key="i"
+			:src="src"
+			:page="i"
+			style="display: inline-block; width: 100%"
+		></pdf>
+	</div>
+          </v-card>
       </v-tab-item>
       <v-tab-item>
-          <v-card flat>4444444444444444</v-card>
+          <v-card flat>无返回结果</v-card>
       </v-tab-item>
     </v-tabs>    
   </v-card>
@@ -147,6 +186,8 @@
   </v-container>
 </template>
 <script>
+import pdf from 'vue-pdf';
+
 import {
   getpatient_type,
   get_regopcode,
@@ -165,9 +206,15 @@ import {
   sch_weixin,
   getregprice
 } from "../scripts/outreg.js";
+var loadingTask = pdf.createLoadingTask('testhl.pdf');
 
 export default {
+    components: {
+    pdf
+  },
   data: () => ({
+    src: loadingTask,
+	numPages: undefined,
     valid: true,
     date: null,
     date1: null,
@@ -234,7 +281,101 @@ export default {
       mchIp: "", //本机局域网IP地址
       ver: process.env.VUE_APP_VERSION //版本号
     },
-   
+   headers: [
+      {
+        text: "Dessert (100g serving)",
+        align: "left",
+        sortable: false,
+        value: "name"
+      },
+      { text: "Calories", value: "calories" },
+      { text: "Fat (g)", value: "fat" },
+      { text: "Carbs (g)", value: "carbs" },
+      { text: "Protein (g)", value: "protein" },
+      { text: "Iron (%)", value: "iron" }
+    ],
+    desserts: [
+      {
+        name: "Frozen Yogurt",
+        calories: 159,
+        fat: 6.0,
+        carbs: 24,
+        protein: 4.0,
+        iron: "1%"
+      },
+      {
+        name: "Ice cream sandwich",
+        calories: 237,
+        fat: 9.0,
+        carbs: 37,
+        protein: 4.3,
+        iron: "1%"
+      },
+      {
+        name: "Eclair",
+        calories: 262,
+        fat: 16.0,
+        carbs: 23,
+        protein: 6.0,
+        iron: "7%"
+      },
+      {
+        name: "Cupcake",
+        calories: 305,
+        fat: 3.7,
+        carbs: 67,
+        protein: 4.3,
+        iron: "8%"
+      },
+      {
+        name: "Gingerbread",
+        calories: 356,
+        fat: 16.0,
+        carbs: 49,
+        protein: 3.9,
+        iron: "16%"
+      },
+      {
+        name: "Jelly bean",
+        calories: 375,
+        fat: 0.0,
+        carbs: 94,
+        protein: 0.0,
+        iron: "0%"
+      },
+      {
+        name: "Lollipop",
+        calories: 392,
+        fat: 0.2,
+        carbs: 98,
+        protein: 0,
+        iron: "2%"
+      },
+      {
+        name: "Honeycomb",
+        calories: 408,
+        fat: 3.2,
+        carbs: 87,
+        protein: 6.5,
+        iron: "45%"
+      },
+      {
+        name: "Donut",
+        calories: 452,
+        fat: 25.0,
+        carbs: 51,
+        protein: 4.9,
+        iron: "22%"
+      },
+      {
+        name: "KitKat",
+        calories: 518,
+        fat: 26.0,
+        carbs: 65,
+        protein: 7,
+        iron: "6%"
+      }
+    ]
   }),
   created() {
     this.out_reg.regOpcode = get_regopcode();
@@ -250,13 +391,13 @@ export default {
   },
   mounted() {
     //window.alert("选中患者"+JSON.stringify(this.$route.params.patient)
+    this.src.then(pdf => {
+
+			this.numPages = pdf.numPages;
+		});
    
   },
-  watch: {
-    menu(val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
-    }
-  },
+  
   methods: {
     save(date) {
       this.$refs.menu.save(date);
