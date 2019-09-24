@@ -68,7 +68,7 @@
                   append-icon="search"
                   label="姓名或住院号"
                   single-line
-                  hide-details @click="getpatient1"
+                  hide-details @click:row="getpatient1($event)"
                 ></v-text-field>
               </v-card-title>
               <v-data-table
@@ -251,10 +251,12 @@ export default {
   methods: {
     
     getpatient(e){
-      window.alert("click"+JSON.stringify(e))
+      window.alert("click="+JSON.stringify(e))
+      this.$router.push({ name: "patient", params: { patient: e } });
+
     },
-    getpatient1(){
-      window.alert("click")
+    getpatient1(e){
+      window.alert("click1="+JSON.stringify(e))
     },
     selectSource() {
       window.location.href = "http://www.cloveropen.com";
